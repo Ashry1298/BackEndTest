@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Api\Admin;
+
 
 
 use App\Models\Category;
@@ -30,24 +31,22 @@ class CategoryController extends Controller
 
 
 
-    public function update(UpdateCategoryRequest $request, $category)
+    public function update(UpdateCategoryRequest $request, Category $category)
     {
-
         $category->update($request->validated());
-
         return $this->successData(new CategoryResource($category));
     }
 
 
 
 
-    public function show($category)
+    public function show(Category $category)
     {
         return $this->successData(new CategoryResource($category));
     }
 
 
-    public function destroy($category)
+    public function destroy(Category $category)
     {
 
         $category->delete();
@@ -56,17 +55,4 @@ class CategoryController extends Controller
 
 
 
-    public function destroyAllCategories(Request $request)
-    {
-        $ids = $request->ids;
-
-        //check if category ids is existed 
-        //then delete 
-
-        if (Category::destroy($ids)) {
-            return response()->json('success');
-        } else {
-            return response()->json('failed');
-        }
-    }
 }
