@@ -21,12 +21,8 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::group(['middleware' => ['guest:sanctum']], function () {
-    Route::prefix('customer')->group(function () {
-        Route::post('sign-up', [CustomerAuthController::class, 'register']);
-        Route::post('sign-in', [CustomerAuthController::class, 'login']);
-    });
-});
+
+// Admin Routes 
 
 
 Route::prefix('admin')->group(function () {
@@ -34,13 +30,11 @@ Route::prefix('admin')->group(function () {
     Route::post('sign-in', [AuthController::class, 'login']);
 });
 
-// add the two routes each one for it's middleware
 
-Route::middleware(['auth:sanctum', 'IsApiCustomer'])->delete('customer/sign-out', [CustomerAuthController::class, 'logout']);
-Route::middleware(['auth:sanctum', 'IsApiAdmin'])->delete('admin/sign-out', [AuthController::class, 'logout']);
 
 Route::group(['middleware' => ['auth:sanctum', 'IsApiAdmin']], function () {
 
+    Route::delete('admin/sign-out', [AuthController::class, 'logout']);
 
 
     //define categories routes 
@@ -53,7 +47,6 @@ Route::group(['middleware' => ['auth:sanctum', 'IsApiAdmin']], function () {
             Route::post('/store', 'store');
             Route::put('/{category}', 'update');
             Route::delete('/{category}', 'destroy');
-            // Route::post('/destroyAll', 'destroyAllCategories');
         });
     });
 
@@ -67,20 +60,35 @@ Route::group(['middleware' => ['auth:sanctum', 'IsApiAdmin']], function () {
             Route::get('/{transaction}', 'show');
             Route::post('/store', 'store');
             Route::put('/{transaction}', 'update');
-
-
         });
     });
 
 
-    Route::post('basic-report',[TransactionReportsController::class,'getBasicReport']);
+    Route::post('basic-report', [TransactionReportsController::class, 'getBasicReport']);
 
-    Route::post('monthly-report',[TransactionReportsController::class,'getMonthlyReport']);
+    Route::post('monthly-report', [TransactionReportsController::class, 'getMonthlyReport']);
+});
+
+
+
+
+
+
+//Customer Routes
+
+Route::group(['middleware' => ['guest:sanctum']], function () {
+    Route::prefix('customer')->group(function () {
+        Route::post('sign-up', [CustomerAuthController::class, 'register']);
+        Route::post('sign-in', [CustomerAuthController::class, 'login']);
+    });
 });
 
 
 
 Route::group(['middleware' => ['auth:sanctum', 'IsApiCustomer']], function () {
+
+    Route::delete('customer/sign-out', [CustomerAuthController::class, 'logout']);
+
 
     //record payment
 
