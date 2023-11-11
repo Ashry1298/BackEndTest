@@ -12,10 +12,10 @@ class TransactionResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'main_category' => $this->category->name,
+            'main_category' =>  $this->category->name ,
             'sub_categories' => $this->subCategory->name,
             'amount' => $this->amount,
-            'user' => $this->user->name,
+            'customer' => $this->customer->name,
             'due_on' => $this->due_on,
             'vat' => $this->vat,
             'is_vat_inclusive' => $this->is_vat_inclusive,

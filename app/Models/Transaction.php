@@ -18,7 +18,8 @@ class Transaction extends Model
         'due_on',
         'vat',
         'is_vat_inclusive',
-        'payment_method'
+        'payment_method',
+        'status',
     ];
 
 

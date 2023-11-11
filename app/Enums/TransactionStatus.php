@@ -2,7 +2,9 @@
 
 namespace App\Enums;
 
-use EnumBase;
+use App\Enums\EnumBase;
+
+
 
 class TransactionStatus extends EnumBase
 {

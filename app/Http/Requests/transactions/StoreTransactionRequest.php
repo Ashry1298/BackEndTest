@@ -14,6 +14,7 @@ class StoreTransactionRequest extends FormRequest
         return true;
     }
 
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -25,8 +26,8 @@ class StoreTransactionRequest extends FormRequest
             'category_id'          => 'required|exists:categories,id',
             'sub_category_id'      => 'required|exists:categories,id',
             'amount'               => 'required|numeric',
-            'payer'                => 'required|exists:users,id',
-            'due_on'               => 'required|date',
+            'customer_id'          => 'required|exists:customers,id',
+            'due_on'               => 'required|date|after_or_equal:' . date('Y-m-d'),
             'vat'                  => 'required|numeric',
             'is_vat_inclusive'     => 'required|in:0,1',
         ];
