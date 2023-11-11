@@ -1,10 +1,13 @@
 <?php
 
-use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Api\Admin\AuthController;
+use App\Http\Controllers\Api\Admin\CategoryController;
+use App\Http\Controllers\Api\Admin\TransactionController;
+use App\Http\Controllers\Api\Admin\TransactionReportsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Customer\AuthController as CustomerAuthController;
-use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\Api\Customer\CustomerController;
+use App\Http\Controllers\Api\Customer\PaymentController;
 use Illuminate\Http\Request;
 
 /*
@@ -23,7 +26,6 @@ Route::group(['middleware' => ['guest:sanctum']], function () {
         Route::post('sign-up', [CustomerAuthController::class, 'register']);
         Route::post('sign-in', [CustomerAuthController::class, 'login']);
     });
-  
 });
 
 
@@ -34,39 +36,58 @@ Route::prefix('admin')->group(function () {
 
 // add the two routes each one for it's middleware
 
-// Route::middleware(['auth:sanctum', 'IsApiCustomer'])->delete('customer/sign-out', [CustomerAuthController::class, 'logout']);
-// Route::middleware(['auth:sanctum', 'IsApiAdmin'])->delete('admin/sign-out', [AuthController::class, 'logout']);
+Route::middleware(['auth:sanctum', 'IsApiCustomer'])->delete('customer/sign-out', [CustomerAuthController::class, 'logout']);
+Route::middleware(['auth:sanctum', 'IsApiAdmin'])->delete('admin/sign-out', [AuthController::class, 'logout']);
 
-// Route::group(['middleware' => ['auth:sanctum', 'IsApiAdmin']], function () {
-
-
+Route::group(['middleware' => ['auth:sanctum', 'IsApiAdmin']], function () {
 
 
 
-//     //define categories routes 
-//     Route::prefix('categories')->group(function () {
+    //define categories routes 
+    Route::prefix('categories')->group(function () {
 
-//         Route::controller(CategoryController::class)->group(function () {
+        Route::controller(CategoryController::class)->group(function () {
 
-//             Route::get('/', 'index');
-//             Route::get('/{category}', 'show');
-//             Route::post('/store', 'store');
-//             Route::put('/{category}', 'update');
-//             Route::delete('/{category}', 'destroy');
-//             Route::post('/destroyAll', 'destroyAllCategories');
-//         });
-//     });
+            Route::get('/', 'index');
+            Route::get('/{category}', 'show');
+            Route::post('/store', 'store');
+            Route::put('/{category}', 'update');
+            Route::delete('/{category}', 'destroy');
+            // Route::post('/destroyAll', 'destroyAllCategories');
+        });
+    });
 
-//     //define transactions routes
+    //define transactions routes
 
-//     Route::prefix('transactions')->group(function () {
+    Route::prefix('transactions')->group(function () {
 
-//         Route::controller(TransactionController::class)->group(function () {
+        Route::controller(TransactionController::class)->group(function () {
 
-//             Route::get('/', 'index');
-//             Route::get('/{transaction}', 'show');
-//             Route::post('/store', 'store');
-//             Route::put('/{transaction}', 'update');
-//         });
-//     });
-// });
+            Route::get('/', 'index');
+            Route::get('/{transaction}', 'show');
+            Route::post('/store', 'store');
+            Route::put('/{transaction}', 'update');
+
+
+        });
+    });
+
+
+    Route::post('basic-report',[TransactionReportsController::class,'getBasicReport']);
+
+    Route::post('monthly-report',[TransactionReportsController::class,'getMonthlyReport']);
+});
+
+
+
+Route::group(['middleware' => ['auth:sanctum', 'IsApiCustomer']], function () {
+
+    //record payment
+
+    Route::post('payments/record-payment', [PaymentController::class, 'recordPayment']);
+
+
+    //view transaction payments
+
+    Route::get('/view-transaction-payments/{transaction}', [CustomerController::class, 'getTransactionPayments']);
+});
