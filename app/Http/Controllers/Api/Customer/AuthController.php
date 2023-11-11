@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api\Customer;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\customers\CustomerLoginRequest;
 use App\Http\Requests\customers\CustomerRegisterRequest;
+use App\Http\Resources\CustomerResource;
 use App\Models\Customer;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,10 +15,12 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    use ResponseTrait;
     public function register(CustomerRegisterRequest $request)
     {
         $customer = Customer::create($request->validated());
-        return response()->json(['message' => 'Customer registered successfully']);
+
+        return $this->successData(new CustomerResource($customer));
     }
 
 
@@ -26,10 +30,11 @@ class AuthController extends Controller
 
         if ($customer && Hash::check($request->password, $customer->password)) {
             $token = $customer->createToken('user-token-name')->plainTextToken;
-            return response()->json(['user-token-name' => $token]);
+            $customer->token = $token;
+            return $this->successData(new CustomerResource($customer));
         }
 
-        return response()->json(['message' => 'Invalid login credentials'], 401);
+        return $this->failMsg('Login failed');
     }
 
 
@@ -37,6 +42,6 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
-        return response()->json(['message' => 'Logged out']);
+        return $this->successMsg('Logout successfully');
     }
 }

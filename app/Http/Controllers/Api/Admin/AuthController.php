@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api\Admin;
 
 
+use App\Http\Resources\AdminResource;
 use App\Models\Admin;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\admins\AdminLoginRequest;
@@ -14,11 +16,14 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    use ResponseTrait;
+
 
     public function register(AdminRegisterRequest $request)
     {
         $admin = Admin::create($request->validated());
-        return response()->json(['message' => 'Admin registered successfully'], 201);
+
+        return $this->successData(new AdminResource($admin));
     }
 
     public function login(AdminLoginRequest $request)
@@ -31,12 +36,19 @@ class AuthController extends Controller
 
         $token = $admin->createToken('admin-token-name')->plainTextToken;
 
-        return response()->json(['access_token' => $token]);
+        $admin->token = $token;
+
+        return $this->successData(new AdminResource($admin));
     }
+
+
+
 
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
-        return response()->json(['message' => 'Logged out']);
+        
+
+        return $this->successMsg('logged out successfully');
     }
 }

@@ -12,7 +12,7 @@ class IsApiCustomer
   
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::guard('customer')->check()) {
+        if (Auth::guard('api')->check()) {
             return $next($request);
         }
 
