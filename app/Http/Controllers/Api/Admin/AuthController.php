@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Admin\AuthController;
+namespace App\Http\Controllers\Api\Admin;
 
 
 use App\Models\Admin;
@@ -32,5 +32,11 @@ class AuthController extends Controller
         $token = $admin->createToken('admin-token-name')->plainTextToken;
 
         return response()->json(['access_token' => $token]);
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+        return response()->json(['message' => 'Logged out']);
     }
 }

@@ -16,7 +16,7 @@ class AuthController extends Controller
     public function register(CustomerRegisterRequest $request)
     {
         $customer = Customer::create($request->validated());
-        return response()->json(['message' => 'User registered successfully']);
+        return response()->json(['message' => 'Customer registered successfully']);
     }
 
 

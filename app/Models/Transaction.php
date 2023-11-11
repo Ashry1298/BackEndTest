@@ -44,4 +44,14 @@ class Transaction extends Model
     {
         return $this->hasMany(Payment::class);
     }
+
+
+    // public function getStatusTextAttribute()
+    // {
+    //     return trans('order.status_' .  ::slug($this->status));
+    // }
+    // public function getPayStatusTextAttribute()
+    // {
+    //     return trans('order.pay_status_' . OrderPayStatus::slug($this->pay_status));
+    // }
 }

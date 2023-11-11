@@ -19,16 +19,6 @@ class TransactionController extends Controller
 
     public function store(StoreTransactionRequest $request)
     {
-        // $transaction = Transaction::create([
-        //     'category_id' => $request->category_id,
-        //     'sub_category_id' => $request->sub_category_id,
-        //     'amount' => $request->amount,
-        //     'user_id' => $request->payer,
-        //     'due_on' => $request->due_on,
-        //     'vat' => $request->vat,
-        //     'is_vat_inclusive' => $request->is_vat_inclusive,
-        // ]);
-
         $transaction = Transaction::create($request->validated());
         return new TransactionResource($transaction);
     }

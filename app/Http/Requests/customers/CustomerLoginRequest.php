@@ -14,15 +14,11 @@ class CustomerLoginRequest extends FormRequest
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
+
     public function rules(): array
     {
         return [
-            'phone' => 'required|numeric|digits_between:9,10|exists:users,phone',
+            'phone' => 'required|numeric|digits_between:9,10|exists:customers,phone',
             'password' => 'required|min:6|max:100',
         ];
     }
